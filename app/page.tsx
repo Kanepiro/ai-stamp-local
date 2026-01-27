@@ -1,30 +1,16 @@
 "use client";
 
-import { useRef, useState } from "react";
-
-const OUTPUT_WIDTH = 370;
-const OUTPUT_HEIGHT = 320; // 370 x 320 PNG (LINE static sticker max)
+import { useState } from "react";
 
 export default function Home() {
   const [message, setMessage] = useState("");
   const [keyword, setKeyword] = useState("");
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState("");
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const canSave = !!imageUrl && !loading;
 
   async function handleGenerate() {
-    setStatus("生成中…");
+    setStatus("作成中…");
     setLoading(true);
-
-    if (imageUrl && imageUrl.startsWith("blob:")) {
-      try {
-        URL.revokeObjectURL(imageUrl);
-      } catch {}
-    }
-
-    setImageUrl(null);
 
     try {
       const params = new URLSearchParams({
@@ -84,76 +70,12 @@ export default function Home() {
     }
   }
 
-  async function handleSave() {
-    if (!imageUrl) return;
-    setStatus("保存用画像を作成中…");
-
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.src = imageUrl;
-
-    await new Promise<void>((resolve, reject) => {
-      img.onload = () => resolve();
-      img.onerror = () => reject(new Error("image load failed"));
-    });
-
-    const canvas = canvasRef.current || (canvasRef.current = document.createElement("canvas"));
-    const width = OUTPUT_WIDTH;
-    const height = OUTPUT_HEIGHT;
-    canvas.width = width;
-    canvas.height = height;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) {
-      setStatus("エラー: canvas が利用できません");
-      return;
-    }
-
-    // 透過背景のまま出力する（canvas はデフォルトで透明）
-    ctx.clearRect(0, 0, width, height);
-
-    // 元画像を縦横比維持で 370×320 内にフィットさせる
-    const srcW = img.width;
-    const srcH = img.height;
-    const scale = Math.min(width / srcW, height / srcH);
-    const drawW = srcW * scale;
-    const drawH = srcH * scale;
-    const dx = (width - drawW) / 2;
-    const dy = (height - drawH) / 2;
-
-    ctx.drawImage(img, dx, dy, drawW, drawH);
-
-    const pngData = canvas.toDataURL("image/png");
-
-    // 保存ファイル名を 01.png, 02.png... の連番にする
-    let seq = 1;
-    try {
-      const key = "ai-stamp-download-seq";
-      const prev = Number(localStorage.getItem(key) || "0");
-      seq = Number.isFinite(prev) ? prev + 1 : 1;
-      localStorage.setItem(key, String(seq));
-    } catch {
-      // localStorage が使えない場合は 01.png
-      seq = 1;
-    }
-    const filename = `${String(seq).padStart(2, "0")}.png`;
-
-    const a = document.createElement("a");
-    a.href = pngData;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-
-    setStatus(`保存しました（${width}×${height}）`);
-  }
-
   return (
     <div className="app-root">
       <div className="card">
         <div className="header">
-          <div className="title">AI-Stamp</div>
-          <div className="version">v3.2.007</div>
+          <div className="title">AI-Stamp-local</div>
+          <div className="version">v5.0.002</div>
         </div>
 
         <div className="row">
@@ -176,31 +98,9 @@ export default function Home() {
           />
         </div>
 
-        <div className="preview">
-          <div className="preview-inner">
-            {imageUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={imageUrl} alt="preview" />
-            ) : (
-              <span style={{ fontSize: 12, color: "#bbb" }}>ここにプレビューが表示されます</span>
-            )}
-          </div>
-        </div>
-
-        <div style={{ fontSize: 10, color: "#999", textAlign: "right" }}>
-          出力サイズ（保存）: {OUTPUT_WIDTH} × {OUTPUT_HEIGHT}
-        </div>
-
         <div className="buttons">
           <button className="primary-btn" onClick={handleGenerate} disabled={loading}>
-            {loading ? "生成中…" : "生成"}
-          </button>
-          <button
-            className={`secondary-btn${canSave ? " save-enabled" : ""}`}
-            onClick={handleSave}
-            disabled={!canSave}
-          >
-            保存
+            {loading ? "作成中…" : "プロンプト作成"}
           </button>
         </div>
 
