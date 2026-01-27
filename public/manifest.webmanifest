@@ -1,6 +1,6 @@
 {
-  "name": "AI-Stamp",
-  "short_name": "AI-Stamp",
+  "name": "AI-Stamp Local",
+  "short_name": "AI-Stamp Local",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#F4F4FA",
