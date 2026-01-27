@@ -2,7 +2,7 @@ import "./globals.css";
 import type { ReactNode } from "react";
 
 export const metadata = {
-  title: "AI-Stamp-local",
+  title: "AI-Stamp",
   description: "AIでLINEスタンプ風の画像を作るツール",
   manifest: "/manifest.webmanifest",
   themeColor: "#AABBE6",
