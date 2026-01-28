@@ -44,11 +44,14 @@ export default function Home() {
 
       const promptText = await res.text();
 
-      const ts = new Date();
-      const pad = (n: number) => String(n).padStart(2, "0");
-      const filename = `prompt-${ts.getFullYear()}${pad(ts.getMonth() + 1)}${pad(
-        ts.getDate()
-      )}-${pad(ts.getHours())}${pad(ts.getMinutes())}${pad(ts.getSeconds())}.txt`;
+      // ファイル名を 00xx.txt（xx: 01〜の通し番号）にする。
+      // ※フォルダ指定はブラウザ仕様上できないため、番号は localStorage に保持する。
+      const SEQ_KEY = "ai-stamp-output-seq";
+      let seq = Number(localStorage.getItem(SEQ_KEY) ?? "0");
+      if (!Number.isFinite(seq) || seq < 0) seq = 0;
+      seq += 1;
+      localStorage.setItem(SEQ_KEY, String(seq));
+      const filename = `${String(seq).padStart(4, "0")}.txt`;
 
       const blob = new Blob([promptText], { type: "text/plain;charset=utf-8" });
       const url = URL.createObjectURL(blob);
@@ -76,7 +79,7 @@ export default function Home() {
       <div className="card">
         <div className="header">
           <div className="title">AI-Stamp Local</div>
-          <div className="version">v4.0.002</div>
+          <div className="version">v4.0.003</div>
         </div>
 
         <div className="row">
