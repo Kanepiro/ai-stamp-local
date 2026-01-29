@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Encoding from "encoding-japanese";
 
 export default function Home() {
   const [message, setMessage] = useState("");
@@ -47,13 +46,7 @@ export default function Home() {
 
       const filename = "prompt.txt";
 
-      // ===== ここから Shift_JIS 変換 =====
-      const unicodeCodes = Encoding.stringToCode(promptText);
-      const sjisCodes = Encoding.convert(unicodeCodes, { from: "UNICODE", to: "SJIS" });
-      const sjisUint8 = new Uint8Array(sjisCodes as number[]);
-      // ===== ここまで Shift_JIS 変換 =====
-
-      const blob = new Blob([sjisUint8], { type: "text/plain;charset=Shift_JIS" });
+      const blob = new Blob([promptText], { type: "text/plain;charset=utf-8" });
       const url = URL.createObjectURL(blob);
 
       const a = document.createElement("a");

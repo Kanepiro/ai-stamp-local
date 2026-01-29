@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import iconv from "iconv-lite";
 
 export const runtime = "nodejs";
 
@@ -184,10 +185,12 @@ export async function GET(req: NextRequest) {
       .join("\n\n");
 
     // Return as a downloadable text file.
-    return new NextResponse(prompt, {
+    const sjis = iconv.encode(prompt, "cp932");
+
+    return new NextResponse(sjis, {
       status: 200,
       headers: {
-        "Content-Type": "text/plain; charset=utf-8",
+        "Content-Type": "text/plain; charset=shift_jis",
         "Cache-Control": "no-store",
       },
     });
