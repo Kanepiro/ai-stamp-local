@@ -42,13 +42,10 @@ export default function Home() {
         return;
       }
 
-      const promptText = await res.text();
-
+      // IMPORTANT: keep response bytes as-is (Shift_JIS/CP932) instead of decoding as UTF-8
+      const blob = await res.blob();
       const filename = "prompt.txt";
-
-      const blob = new Blob([promptText], { type: "text/plain;charset=utf-8" });
       const url = URL.createObjectURL(blob);
-
       const a = document.createElement("a");
       a.href = url;
       a.download = filename;
