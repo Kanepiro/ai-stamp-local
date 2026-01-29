@@ -15,11 +15,11 @@ export async function GET(req: NextRequest) {
     const keyword = searchParams.get("keyword") ?? "";
 
     const text =
-      message.trim().length > 0 ? message.trim() : "PayPayã‚çsÇ÷ì¸ã‡ÇÊÇÎÇµÇ≠";
+      message.trim().length > 0 ? message.trim() : "PayPayÈäÄË°å„Å∏ÂÖ•Èáë„Çà„Çç„Åó„Åè";
     const theme =
-      keyword.trim().length > 0 ? keyword.trim() : "îûêFÇÃñ—ÇÃîL";
+      keyword.trim().length > 0 ? keyword.trim() : "È∫¶Ëâ≤„ÅÆÊØõ„ÅÆÁå´";
 
-    const isMochi = /ñ›|Ç‡Çø|mochi/i.test(theme);
+    const isMochi = /È§Ö|„ÇÇ„Å°|mochi/i.test(theme);
     const mochiConstraints: string[] = isMochi
       ? [
           "For a mochi (rice cake) character: render the body as pure opaque white, soft and slightly squishy, smooth with a subtle powdery texture.",
@@ -58,20 +58,20 @@ export async function GET(req: NextRequest) {
       "Make the character's reaction VERY exaggerated and over-the-top (big facial expression, big mouth, bold eyebrows, sweat drops/tears, motion lines).",
       "The text and the character must not be transparent. Only the background is transparent.",
       "The area inside the outline must not be transparent.",
-      'ABSOLUTE: If the theme is "ÇÁÇﬁÇøÇ·ÇÒ", NEVER draw any horns/antennae (no horns at all).',
+      'ABSOLUTE: If the theme is "„Çâ„ÇÄ„Å°„ÇÉ„Çì", NEVER draw any horns/antennae (no horns at all).',
       "ABSOLUTE RULE (NO EXCEPTIONS): The character, the Japanese text, and the white sticker backing must NEVER contain transparency. Alpha must be 255 (fully opaque) everywhere inside the sticker area.",
       "If you are unsure whether a pixel belongs to the character/text/backing or the background, make it OPAQUE (not transparent).",
       "Even if the character is pure white on a pure white sticker backing, keep it fully opaque and separate edges with a thin light-gray outline and/or a tiny soft shadow (both fully opaque). Do NOT erase white parts.",
       "Never use transparency for highlights, shading, glow, or sparkles on the character/text; render all effects as opaque colors.",
       "",
       "Character reference glossary (for interpreting the keyword/theme):",
-      "? ÅwñlÅx: a cute chibi boy character whose body IS mochi (Japanese rice cake). Mochi is made from pounded glutinous rice and looks like a smooth, soft, slightly squishy, fully opaque white mass (NOT transparent). Keep it simple and rounded, like a mochi blob.",
-      "? ÅwÇÁÇﬁÇøÇ·ÇÒÅx: An ORIGINAL chibi woman character and MUST look NOTHING like any existing anime/manga character.",
+      "? „ÄéÂÉï„Äè: a cute chibi boy character whose body IS mochi (Japanese rice cake). Mochi is made from pounded glutinous rice and looks like a smooth, soft, slightly squishy, fully opaque white mass (NOT transparent). Keep it simple and rounded, like a mochi blob.",
+      "? „Äé„Çâ„ÇÄ„Å°„ÇÉ„Çì„Äè: An ORIGINAL chibi woman character and MUST look NOTHING like any existing anime/manga character.",
       "  - NOT based on any existing anime/manga. Must NOT resemble any copyrighted/trademarked character in face, hair, outfit, accessories, or overall vibe.",
       "  - Age: 23. Gender: woman. Slightly chubby.",
       "  - Hair: brown with red mesh highlights.",
-      "  - ÅwÇﬁÇ¨ÇøÇ·ÇÒÅx's owner; she adores and spoils ÅwÇﬁÇ¨ÇøÇ·ÇÒÅx. She works nights (adult/night job), but keep depiction non-explicit and wholesome: no nudity, no lingerie, no sexual content.",
-      "? ÅwÇﬁÇ¨ÇøÇ·ÇÒÅx: a 7-month-old female cat/kitten with LIGHT wheat-colored fur (light wheat-colored fur), pale golden-beige. (NOT chestnut.)",
+      "  - „Äé„ÇÄ„Åé„Å°„ÇÉ„Çì„Äè's owner; she adores and spoils „Äé„ÇÄ„Åé„Å°„ÇÉ„Çì„Äè. She works nights (adult/night job), but keep depiction non-explicit and wholesome: no nudity, no lingerie, no sexual content.",
+      "? „Äé„ÇÄ„Åé„Å°„ÇÉ„Çì„Äè: a 7-month-old female cat/kitten with LIGHT wheat-colored fur (light wheat-colored fur), pale golden-beige. (NOT chestnut.)",
       "IMPORTANT: Do not depict, imitate, or reference any third-party copyrighted/trademarked characters, logos, brands, or recognizable IP. All characters and designs must be original.",
       "Do not include URLs, release announcements, or calls-to-action in the artwork text.",
       "Keep the sticker appropriate for general audiences: no nudity, no explicit sexual content, no extreme violence, no self-harm, no illegal drugs, and no hate/harassment.",
@@ -166,7 +166,7 @@ export async function GET(req: NextRequest) {
 
     const free360Block = [
       "OVERRIDE ORIENTATION: Ignore any earlier fixed front/right view constraints.",
-      "Camera angle is FREE 360Åã and must be RANDOM each generation.",
+      "Camera angle is FREE 360¬∞ and must be RANDOM each generation.",
       `Random camera angle for this image: ${angle}.`,
       "The camera may be above, below, behind, or any direction around the subject.",
       "However, the character's eyes/gaze must look directly at the camera (the viewer).",
@@ -184,13 +184,14 @@ export async function GET(req: NextRequest) {
       .filter(Boolean)
       .join("\n\n");
 
-    // Return as a downloadable text file.
-    const sjis = iconv.encode(prompt, "cp932");
+    // Return as a downloadable Shift_JIS (CP932) encoded text file.
+    const sjisBuf = iconv.encode(prompt, "cp932");
 
-    return new NextResponse(sjis, {
+    return new NextResponse(sjisBuf, {
       status: 200,
       headers: {
         "Content-Type": "text/plain; charset=shift_jis",
+        "Content-Disposition": 'attachment; filename="prompt.txt"',
         "Cache-Control": "no-store",
       },
     });
