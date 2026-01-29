@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
     const frontPrompt = [
       "Generate a single LINE-style Japanese sticker illustration.",
       "Overall style: soft, cute, chibi-style character illustration.",
-      "Do not make the illustration small and centered. Use the 370x320 canvas broadly and fill the available area.",
+      "Do not make the illustration small and centered. Use the 1024x1024 canvas broadly and fill the available area.",
       "Make the Japanese text as large as possible while keeping it fully readable.",
       "The character (body, face, clothes, accessories) must be painted with solid, fully opaque colors.",
       "Do NOT make the character translucent or see-through: no glass, jelly, clear, ghost, watery, or low-opacity effects.",
