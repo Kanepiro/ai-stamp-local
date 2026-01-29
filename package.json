@@ -1,6 +1,6 @@
 {
   "name": "ai-stamp-pwa",
-  "version": "4.0.009",
+  "version": "4.0.010",
   "private": true,
   "scripts": {
     "dev": "next dev",
