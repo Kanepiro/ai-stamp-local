@@ -44,14 +44,7 @@ export default function Home() {
 
       const promptText = await res.text();
 
-      // ファイル名を 00xx.txt（xx: 01〜の通し番号）にする。
-      // ※フォルダ指定はブラウザ仕様上できないため、番号は localStorage に保持する。
-      const SEQ_KEY = "ai-stamp-output-seq";
-      let seq = Number(localStorage.getItem(SEQ_KEY) ?? "0");
-      if (!Number.isFinite(seq) || seq < 0) seq = 0;
-      seq += 1;
-      localStorage.setItem(SEQ_KEY, String(seq));
-      const filename = `${String(seq).padStart(4, "0")}.txt`;
+      const filename = "prompt.txt";
 
       const blob = new Blob([promptText], { type: "text/plain;charset=utf-8" });
       const url = URL.createObjectURL(blob);
