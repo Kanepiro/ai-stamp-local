@@ -46,6 +46,33 @@ export async function GET(req: NextRequest) {
 
     const angle = angles[Math.floor(Math.random() * angles.length)];
 
+    const textPlacements = [
+      "at the top",
+      "at the bottom",
+      "diagonally from top-left to bottom-right",
+      "diagonally from top-right to bottom-left",
+    ] as const;
+
+    const characterPlacements = [
+      "centered",
+      "on the left side",
+      "on the right side",
+    ] as const;
+
+    const cameraDistances = [
+      "extreme close-up",
+      "close-up",
+      "half-body",
+      "full-body",
+    ] as const;
+
+    const textPlacement =
+      textPlacements[Math.floor(Math.random() * textPlacements.length)];
+    const characterPlacement =
+      characterPlacements[Math.floor(Math.random() * characterPlacements.length)];
+    const cameraDistance =
+      cameraDistances[Math.floor(Math.random() * cameraDistances.length)];
+
     const contextIsolationBlock = [
       "CONTEXT ISOLATION (HIGHEST PRIORITY):",
       "This request is fully standalone. Use ONLY the instructions in this prompt.",
@@ -57,6 +84,9 @@ export async function GET(req: NextRequest) {
     const frontPrompt = [
       "Generate a single LINE-style Japanese sticker illustration.",
       "Overall style: soft, cute, chibi-style character illustration.",
+      "Rendering style lock: clean, crisp lineart and smooth shading for a sticker-style finish.",
+      "NO watercolor, NO textured paper, NO grain, NO crayon/pastel, NO faded/washed-out look.",
+      "Keep edges sharp and colors solid (fully opaque).",
       "Do not make the illustration small and centered. Use the 1024x1024 canvas broadly and fill the available area.",
       "Make the text as large as possible while keeping it fully readable.",
       "TEXT RULES (STRICT): The ONLY text allowed in the entire image is the provided message.",
@@ -87,69 +117,6 @@ export async function GET(req: NextRequest) {
       "Do not include URLs, release announcements, or calls-to-action in the artwork text.",
       "Keep the sticker appropriate for general audiences: no nudity, no explicit sexual content, no extreme violence, no self-harm, no illegal drugs, and no hate/harassment.",
       "",
-      "[Guidelines (must be followed to avoid rejection)]",
-      "1. Images (sticker images, main image, chat room tab image)",
-      "1.1. Items that do not conform to the format specified by the platform/company",
-      "1.2. Items that are not suitable for conversation/communication",
-      "1.3. Poor visibility (e.g., extremely wide images, full-body 8-head-tall characters, etc.)",
-      "1.4. Stickers with a severely unbalanced overall composition (e.g., only pale colors, mere strings of numbers, etc.)",
-      "1.5. Logo-only designs",
-      "1.6. Images consisting of only simple text",
-      "1.7. Text inside the sticker contains mistakes/typos",
-      "1.8. Contradicts the description or title",
-      "1.9. Main image/tab image that is significantly different from the stickers being sold",
-      "1.10. Duplicates of stickers already sold or already submitted/reviewed in the sticker shop",
-      "",
-      "2. Text (sticker title, product description, creator name, copyright)",
-      "2.1. Items that do not conform to the format specified by the platform/company",
-      "2.2. Text contains mistakes/typos",
-      "2.3. Titles/descriptions containing announcement copy (e.g., \"Scheduled for release on [date]\", \"Search for [keyword]\", etc.)",
-      "2.4. URLs are shown",
-      "2.5. Emoji (e.g., hearts) or platform/device-dependent characters are included",
-      "2.6. Extremely short text",
-      "2.7. Contradicts the sticker images",
-      "",
-      "3. Morals",
-      "3.1. Promotes or encourages crime",
-      "3.2. Depicts violence, child abuse, or child pornography",
-      "3.3. Excessive skin exposure",
-      "3.4. Promotes excessive alcohol consumption, illegal drugs, or alcohol/tobacco consumption by minors",
-      "3.5. Encourages drunk driving",
-      "3.6. Realistic depictions of illegal weapons, or likely encourages their use",
-      "3.7. Intended for phishing or spam",
-      "3.8. Realistic depictions of killing or injuring people/animals (shot, stabbed, torture, etc.)",
-      "3.9. Could defame, slander, or attack a specific individual, corporation, country, or group",
-      "3.10. Discloses or may disclose personal information of others or oneself",
-      "3.11. Excessively unpleasant or vulgar content",
-      "3.12. Attacks religion, culture, ethnicity, nationality, or causes strong discomfort",
-      "3.13. Religious solicitation/enlightenment, or overly strong religious elements",
-      "3.14. Political expression or election-related content",
-      "3.15. Designed to confuse or disgust users",
-      "3.16. Sexual expression/content",
-      "3.17. Encourages gambling or gambling-like activities",
-      "3.18. Intended to obtain user passwords or private user data",
-      "3.19. Could hinder healthy youth development (e.g., pachinko, horse racing, etc.)",
-      "3.20. Induces or encourages suicide, self-harm, or drug abuse",
-      "3.21. Induces or encourages bullying",
-      "3.22. Promotes discrimination or may do so",
-      "3.23. Other antisocial content or content that may offend others",
-      "",
-      "4. Business / Advertising / Other",
-      "4.1. Requires providing personal information/ID in order to purchase the stickers",
-      "4.2. Intended to provide (free or paid) to third parties beyond personal use (e.g., giving away stickers to visitors via a company campaign)",
-      "4.3. Mentions the name of a messenger app (or similar service), or includes characters related to it",
-      "4.4. Intended for commercial advertising/promotion for apps/services/companies (including recruiting/job postings, etc.)",
-      "4.5. Solicits charity or donations",
-      "4.6. Solicits membership or donations for political groups, religious groups, antisocial forces, or other organizations",
-      "",
-      "5. Rights / Laws",
-      "5.1. Infringes or violates intellectual property rights (trademark, copyright, patents, design rights, etc.) of the platform or third parties, or violates third-party asset/license terms",
-      "5.2. Rights ownership is unclear (e.g., derivative works/fan art, etc.)",
-      "5.3. Infringes portrait rights or publicity rights (e.g., an unlicensed face/portrait, caricature, etc.)",
-      "5.4. Cannot prove permission from the rights holder",
-      "5.5. Otherwise violates applicable laws in the service region, or infringes third-party rights/interests",
-      "",
-      "",
       "CRITICAL: Render the message EXACTLY as provided, character-for-character.",
       "No typos, no missing characters, no extra characters, no substitutions, and no paraphrasing.",
       "Prioritize text correctness over decoration. If needed, reduce sparkles/ornaments but keep the characters exact.",
@@ -165,6 +132,12 @@ export async function GET(req: NextRequest) {
       "Everything outside this white sticker backing must be fully transparent (alpha channel).",
       "Do not add any other background elements such as panels, gradients, or patterns beyond the white sticker backing. Motion lines and sparkle decorations are allowed as part of the sticker art, as long as everything stays inside the white sticker backing and remains fully opaque.",
       "Ensure the entire character and the text are filled and fully opaque (no accidental transparency holes). You may anti-alias only the outer edges; the interior must remain opaque.",
+    ].join("\n");
+
+    const layoutBlock = [
+      "COMPOSITION VARIATION (REQUIRED):",
+      `Random layout for this image: text ${textPlacement}; character ${characterPlacement}; camera distance ${cameraDistance}.`,
+      "Vary the overall layout each generation. Do NOT reuse a previous layout.",
     ].join("\n");
 
     const free360Block = [
@@ -183,7 +156,7 @@ export async function GET(req: NextRequest) {
       `Include the message "${text}" inside the illustration as part of the artwork.`,
     ].join("\n");
 
-    const prompt = [contextIsolationBlock, frontPrompt, free360Block, variableBlock]
+    const prompt = [contextIsolationBlock, frontPrompt, layoutBlock, free360Block, variableBlock]
       .filter(Boolean)
       .join("\n\n");
 
