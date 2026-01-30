@@ -46,6 +46,14 @@ export async function GET(req: NextRequest) {
 
     const angle = angles[Math.floor(Math.random() * angles.length)];
 
+    const contextIsolationBlock = [
+      "CONTEXT ISOLATION (HIGHEST PRIORITY):",
+      "This request is fully standalone. Use ONLY the instructions in this prompt.",
+      "Ignore any prior conversation, prior images, prior attempts, and any external context.",
+      "Do not reference, continue, or stay consistent with any previous outputs.",
+      "Create a fresh, independent sticker design that does NOT resemble any prior result unless explicitly described here.",
+    ].join("\n");
+
     const frontPrompt = [
       "Generate a single LINE-style Japanese sticker illustration.",
       "Overall style: soft, cute, chibi-style character illustration.",
@@ -175,7 +183,7 @@ export async function GET(req: NextRequest) {
       `Include the message "${text}" inside the illustration as part of the artwork.`,
     ].join("\n");
 
-    const prompt = [frontPrompt, free360Block, variableBlock]
+    const prompt = [contextIsolationBlock, frontPrompt, free360Block, variableBlock]
       .filter(Boolean)
       .join("\n\n");
 
